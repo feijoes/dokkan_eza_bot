@@ -2,7 +2,7 @@ import subprocess
 import bot
 from time import sleep
 import sys
-def run_scrcpy():
+def run_scrcpy() :
     command = [
         "scrcpy",
         "--turn-screen-off",
@@ -14,23 +14,22 @@ def run_scrcpy():
         "-f"
         
     ]
-
-    try:
-        subprocess.Popen(command)
-    except subprocess.CalledProcessError as e:
-        print(f"Error while running scrcpy: {e}")
-    except FileNotFoundError:
-        print("scrcpy not found. Make sure it is installed and available in your PATH.")
+    return subprocess.Popen(command)
+    
 
 if __name__ == "__main__":
-    run_scrcpy()
-    if "pos" in sys.argv:
-        print("Printing positions")
-        bot.GetPosition()
-    else:
-        sleep(2)
-
-        print("Program starting")
-        bot.start()
+    process = run_scrcpy()
+    try:
+        
+        if "pos" in sys.argv:
+            print("Printing positions")
+            bot.GetPosition()
+        else:
+            sleep(4)
+            print("Program starting")
+            bot.start()
+    except BaseException as e:
+        process.terminate()
+        print(e)     
     
     
