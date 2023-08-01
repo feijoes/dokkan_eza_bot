@@ -1,8 +1,6 @@
 # Dokkan Battle EZA Farming Bot
 
-# Dragon Ball Z: Dokkan Battle Auto-Play Script
-
-![Dokkan Battle Auto-Play Script](project_banner.png)
+![Dokkan Battle Auto-Play Script](https://github.com/feijoes/dokkan_eza_bot/assets/74252371/c2f5c2bf-1e0c-4ebe-8792-ec55113311ce)
 
 ## Introduction
 
