@@ -1,8 +1,6 @@
 # Dokkan Battle EZA Farming Bot
 
-# Dragon Ball Z: Dokkan Battle Auto-Play Script
-
-![Dokkan Battle Auto-Play Script](project_banner.png)
+![Dokkan Battle Auto-Play Script](https://github.com/feijoes/dokkan_eza_bot/assets/74252371/c2f5c2bf-1e0c-4ebe-8792-ec55113311ce)
 
 ## Introduction
 
@@ -30,9 +28,8 @@ The Dokkan Battle EZA Farming Bot is a Python script designed to automate the pr
 1. Connect your Android device to your computer and enable USB debugging.
 2. Launch the Dokkan Battle app on your Android device.
 3. Open a terminal or command prompt in the project directory.
-4. Run the script with: `python eza_farming_bot.py`
-5. Follow the on-screen instructions to set up the bot (e.g., selecting your device, adjusting settings, etc.).
-6. Sit back and let the bot automate the EZA farming process for you.
+4. Run the script with: `python main.py`
+5. Sit back and let the bot automate the EZA farming process for you.
 
 ## Disclaimer
 
