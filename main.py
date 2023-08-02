@@ -1,10 +1,10 @@
 import subprocess
-import bot
+import eza_farming_bot
 from time import sleep
     
 if __name__ == "__main__":
-    print("Program starting")
-    bot.start()
+    print("\t\tProgram starting\n")
+    eza_farming_bot.start()
 
     
     
