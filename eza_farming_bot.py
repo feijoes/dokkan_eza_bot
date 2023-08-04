@@ -5,9 +5,10 @@ import cv2
 import numpy as np
 import pytesseract
 from PIL import Image
-
+import datetime
 def error(image_name)-> None:
     print(f"Template {image_name} is not present in the target image.")
+    
     quit()
     
 def find_image_position(template_image: str,screenshot, threshold=0.8):
@@ -36,9 +37,11 @@ def find_image_position(template_image: str,screenshot, threshold=0.8):
 
 PRINT_TEXT = { 
     "./Images/FIGHT.jpeg": "Click to start Fight",
+    "./Images/FIGHT2.jpeg": "Click to start Fight",
     "./Images/START.jpeg": "Click to confirm battle",
     "./Images/End.jpeg": "Check if battle ends",
     "./Images/OK.jpeg": "Click OK button",
+    "./Images/CANCEL.jpeg": "CLick in Cancel button"
 }   
     
 class EZA():
@@ -48,12 +51,12 @@ class EZA():
         self.start = start
         self.end = end
 
-    def _find_and_click(self, image_path: str, trys=10,wait:int=1):
+    def _find_and_click(self, image_path: str, trys=20,wait:int=1,special=0):
         for _ in range(trys):
             find, x_pos, y_pos = self._find_image_position(image_path)
             if find:
                 print(f"{PRINT_TEXT[image_path]}")
-                self.device.click(x_pos, y_pos)
+                self.device.click(x_pos-special, y_pos)
                 return True
             sleep(wait)
         return False
@@ -63,30 +66,49 @@ class EZA():
         template_image = cv2.imread(image_path)
         return find_image_position(template_image,screenshot)
 
-    def Fight(self, trys=10):
-        image_path = "./Images/FIGHT.jpeg"
+    def Fight(self, trys=20, Raise_error: bool=True):
+        image_path = "./Images/FIGHT2.jpeg"
         if not self._find_and_click(image_path, trys):
-            error(image_path)
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            if Raise_error:
+                error(image_path)
             return False
         return True
-    def Start(self, trys=10):
+    def Start(self, trys=20, Raise_error: bool=True):
         image_path = "./Images/START.jpeg"
         if not self._find_and_click(image_path, trys):
-            error(image_path)
+            
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            if Raise_error:
+                error(image_path)
             return False
         return True
-    def OK(self, trys=10):
+    def OK(self, trys=20, Raise_error: bool=True):
         image_path = "./Images/OK.jpeg"
         if not self._find_and_click(image_path, trys):
-            error(image_path)
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            if Raise_error:
+                error(image_path)
             return False
         return True
-    def End(self, trys=10):
+    def End(self, trys=20, Raise_error: bool=True):
         image_path = "./Images/End.jpeg"
-        if not self._find_and_click(image_path, trys,wait=20):
-            error(image_path)
+        if not self._find_and_click(image_path, trys,wait=20,special=100):
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            if Raise_error:
+                error(image_path)
             return False
         return True
+    
+    def Cancel(self, trys=20, Raise_error: bool=True):
+        image_path = "./Images/CANCEL.jpeg"
+        if not self._find_and_click(image_path, trys,wait=20,special=100):
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            if Raise_error:
+                error(image_path)
+            return False
+        return True
+
     def click_center_screen(self):
         x , y = self.device.window_size()
         print("Clicking at the center of the screen.")
@@ -126,12 +148,13 @@ def start():
         sleep(1)
         eza.Start()
         sleep(1)
-        eza.End(20)
-        sleep(0.5)
+        eza.End(50)
+        sleep(1.5)
         eza.OK()
-        sleep(0.5)
-        eza.OK()
-        sleep(0.5)
+        sleep(1.5)
+        if not eza.Cancel(trys=5,Raise_error=False):
+            eza.OK
+        sleep(1.5)
         eza.click_center_screen()
   
             
