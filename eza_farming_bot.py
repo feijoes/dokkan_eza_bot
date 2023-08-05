@@ -152,8 +152,8 @@ def start():
         sleep(1.5)
         eza.OK()
         sleep(1.5)
-        if not eza.Cancel(trys=5,Raise_error=False):
-            eza.OK
+        if not eza.Cancel(trys=3,Raise_error=False):
+            eza.OK()
         sleep(1.5)
         eza.click_center_screen()
   
