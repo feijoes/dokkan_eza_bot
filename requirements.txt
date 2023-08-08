@@ -1,0 +1,5 @@
+adbutils==1.2.12
+numpy==1.25.1
+opencv_python==4.8.0.74
+Pillow==10.0.0
+pytesseract==0.3.10
