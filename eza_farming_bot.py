@@ -5,9 +5,10 @@ import cv2
 import numpy as np
 import pytesseract
 from PIL import Image
+from typing import Callable
 import datetime
-def error(image_name)-> None:
-    print(f"Template {image_name} is not present in the target image.")
+def error(text)-> None:
+    print(text)
     
     quit()
     
@@ -41,7 +42,9 @@ PRINT_TEXT = {
     "./Images/START.jpeg": "Click to confirm battle",
     "./Images/End.jpeg": "Check if battle ends",
     "./Images/OK.jpeg": "Click OK button",
-    "./Images/CANCEL.jpeg": "CLick in Cancel button"
+    "./Images/CANCEL.jpeg": "CLick in Cancel button",
+    "./Images/SELECT.jpeg": "CLick to select Eza",
+    "./Images/EXIT.jpeg": "Click to exit eza"
 }   
     
 class EZA():
@@ -52,11 +55,21 @@ class EZA():
         self.end = end
 
     def _find_and_click(self, image_path: str, trys=20,wait:int=1,special=0):
+        """Return True if success else False """
         for _ in range(trys):
             find, x_pos, y_pos = self._find_image_position(image_path)
             if find:
                 print(f"{PRINT_TEXT[image_path]}")
                 self.device.click(x_pos-special, y_pos)
+                return True
+            sleep(wait)
+        return False
+    
+    def _find(self, image_path: str, trys=20,wait:int=1):
+        """Return True if success else False """
+        for _ in range(trys):
+            find, _, _ = self._find_image_position(image_path)
+            if find:
                 return True
             sleep(wait)
         return False
@@ -66,46 +79,62 @@ class EZA():
         template_image = cv2.imread(image_path)
         return find_image_position(template_image,screenshot)
 
-    def Fight(self, trys=20, Raise_error: bool=True):
-        image_path = "./Images/FIGHT2.jpeg"
+    def SelectLevel(self, trys=20, raise_error: bool=True):
+        image_path = "./Images/SELECT.jpeg"
         if not self._find_and_click(image_path, trys):
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-            if Raise_error:
-                error(image_path)
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def Start(self, trys=20, Raise_error: bool=True):
+    def ExitLevel(self, trys=20, raise_error: bool=True):
+        image_path = "./Images/EXIT.jpeg"
+        if not self._find_and_click(image_path, trys):
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
+            return False
+        return True
+    def Fight(self, trys=20, raise_error: bool=True):
+        image_path = "./Images/FIGHT2.jpeg"
+        if not self._find_and_click(image_path, trys):
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
+            return False
+        return True
+    def Start(self, trys=20, raise_error: bool=True):
         image_path = "./Images/START.jpeg"
         if not self._find_and_click(image_path, trys):
             
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-            if Raise_error:
-                error(image_path)
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def OK(self, trys=20, Raise_error: bool=True):
+    def OK(self, trys=20, raise_error: bool=True):
         image_path = "./Images/OK.jpeg"
         if not self._find_and_click(image_path, trys):
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-            if Raise_error:
-                error(image_path)
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def End(self, trys=20, Raise_error: bool=True):
+    def End(self, trys=20, raise_error: bool=True):
         image_path = "./Images/End.jpeg"
         if not self._find_and_click(image_path, trys,wait=20,special=100):
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-            if Raise_error:
-                error(image_path)
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
             return False
         return True
     
-    def Cancel(self, trys=20, Raise_error: bool=True):
+    def Cancel(self, trys=20, raise_error: bool=True):
         image_path = "./Images/CANCEL.jpeg"
         if not self._find_and_click(image_path, trys,wait=20,special=100):
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-            if Raise_error:
-                error(image_path)
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
             return False
         return True
 
@@ -114,12 +143,16 @@ class EZA():
         print("Clicking at the center of the screen.")
         self.device.click(x / 2,y / 2)
         
-    def get_level(self)-> int:
+    def get_level(self,debug=False, zone: int = 1)-> int:
         screenshot = np.array(self.device.screenshot())
         pil_image = Image.fromarray(screenshot)
 
         # Crop the image to the specified region of interest
-        x1, y1, x2, y2 = 890, 570, 1010, 630
+        if zone == 1: x1, y1, x2, y2 = 890, 570, 1010, 630
+        else:
+            x , y = self.device.window_size()
+            center_x, center_y = x//2, y //2
+            x1, y1, x2, y2 = center_x-100, center_y+335 , center_x+110, center_y + 458
         cropped_image = pil_image.crop((x1, y1, x2, y2))
 
         # Convert the cropped image to grayscale
@@ -127,15 +160,31 @@ class EZA():
 
         # Perform thresholding on the grayscale image
         thresh_image = cv2.threshold(src=np.array(gray_cropped_image), thresh=0, maxval=255, type=cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)[1]
-
+        
         # Display the cropped image for testing
-        cropped_image.show()
+        if debug: cropped_image.show()
 
         # Perform OCR on the thresholded image
         result: str = pytesseract.image_to_string(thresh_image, config="--psm 7 output digits")
+        if result:
+            print(result.split())
+            return int(result.split()[0])
+        cropped_image.save(f"ERROR_{datetime.datetime.now()}.jpeg")
+        quit("Unknow Eza level")
+    
+    def Swipe(self):
+        x , y = self.device.window_size()
+        self.device.swipe((x/2)+100,(y/2)+300,(x/2)-100,(y/2)+450,0.5)
+    
+    def WaitUntil(self, image_path: str, function: Callable[[], None], wait:int, trys=10, raise_error: bool=True):
+        if not self._find(image_path, trys, wait):
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
+            return False
+        function()
+        return True
         
-        return int(result.split()[0])
-
     
        
 def start():
@@ -143,19 +192,35 @@ def start():
     device: AdbDevice = adb.device()
     eza = EZA(device)
     while True:
-        sleep(1)
-        eza.Fight()
-        sleep(1)
-        eza.Start()
-        sleep(1)
-        eza.End(50)
-        sleep(1.5)
-        eza.OK()
-        sleep(1.5)
-        if not eza.Cancel(trys=3,Raise_error=False):
-            eza.OK()
-        sleep(1.5)
-        eza.click_center_screen()
+        sleep(0.5)
+        level: int = eza.get_level()
+        if level < 31:
+            for _ in range(31-level):
+                print("Start eza")
+                eza.SelectLevel()
+                sleep(0.5)
+                eza.Fight()
+                sleep(1)
+                eza.Start()
+                sleep(1)
+                eza.End(50)
+                sleep(1.5)
+                eza.OK()
+                sleep(1)
+                if not eza.Cancel(trys=1,raise_error=False):
+                    eza.OK()
+                eza.OK()
+                sleep(1.5)
+                eza.click_center_screen()
+            eza.ExitLevel()
+        print("Change EZA")
+        eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=2) 
+        
+        
+            
+        
+        
+        
   
             
         
@@ -169,3 +234,4 @@ def start():
         
 
     
+""""""
