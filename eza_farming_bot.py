@@ -195,21 +195,24 @@ def start():
         sleep(0.5)
         level: int = eza.get_level()
         if level < 31:
+            print("Start eza")
+            eza.SelectLevel()
             for _ in range(31-level):
-                print("Start eza")
-                eza.SelectLevel()
+                
                 sleep(0.5)
                 eza.Fight()
                 sleep(1)
                 eza.Start()
                 sleep(1)
-                eza.End(50)
+                if not eza.End(50,raise_error=False):
+                    print("lost batlle , change eza")
+                    break
                 sleep(1.5)
                 eza.OK()
                 sleep(1)
                 if not eza.Cancel(trys=1,raise_error=False):
                     eza.OK()
-                eza.OK()
+                    eza.OK(trys=3,raise_error=False)
                 sleep(1.5)
                 eza.click_center_screen()
             eza.ExitLevel()
