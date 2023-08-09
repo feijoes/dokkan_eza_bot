@@ -12,6 +12,8 @@ _This bot is no a autoclicker_; it not only completes the levels but also manage
 
 The bot's functionality is not yet complete, and there are issues such as being able to complete 30 levels of LR EZAs.
 
+If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
+
 ## Features
 
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
