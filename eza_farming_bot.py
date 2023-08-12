@@ -166,7 +166,7 @@ class EZA():
 
         # Perform OCR on the thresholded image
         result: str = pytesseract.image_to_string(thresh_image, config="--psm 7 output digits")
-        if result:
+        if result[0]:
             print(result.split())
             return int(result.split()[0])
         cropped_image.save(f"ERROR_{datetime.datetime.now()}.jpeg")
@@ -220,9 +220,28 @@ def start():
         eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=2) 
         
         
-            
-        
-        
+def inf():
+    device: AdbDevice = adb.device()
+    eza = EZA(device)
+    while True:
+        sleep(0.5)
+        eza.Fight()
+        sleep(1)
+        eza.Start()
+        sleep(1)
+        if not eza.End(50,raise_error=False):
+            print("lost batlle , change eza")
+            break
+        sleep(1.5)
+        eza.OK()
+        sleep(1)
+        if not eza.Cancel(trys=1,raise_error=False):
+            eza.OK()
+            eza.OK(trys=3,raise_error=False)
+        sleep(1)
+        eza.click_center_screen()
+ 
+             
         
   
             
