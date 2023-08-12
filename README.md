@@ -6,30 +6,43 @@
 
 The Dokkan Battle EZA Farming Bot is a Python script designed to automate the process of farming the Extreme Z-Awakening levels in Dragon Ball Z Dokkan Battle. The script runs on your computer and interacts with the game on your phone.
 
+_This bot is no a autoclicker_; it not only completes the levels but also manages the current level of the EZA and switches between different EZAs.
+
+***This bot is still in beta version***
+
+The bot's functionality is not yet complete, and there are issues such as being able to complete 30 levels of LR EZAs.
+
+If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
+
 ## Features
 
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
 - It identifies buttons and actions using images, so it can adapt to different screen sizes and resolutions.
+- Can swipe bettwen eza and only 
 
 ## Requirements
 
 1. You need an Android device with USB debugging enabled. This allows the script to communicate with the phone via a USB cable.
+2. Get you phone in [developers options](https://www.digitaltrends.com/mobile/how-to-get-developer-options-on-android/) and enable the options:
+      * **Dont lock screen**: This prevents the screen from locking to ensure uninterrupted gameplay.
+      * **USB Debbuging**
 
-2. Your computer should have Python 3.x installed. You can download it from the official Python website.
-
-## Installation
-
-1. Connect your Android device to your computer via USB and make sure USB debugging is enabled on the device.
-
-2. Install the required Python packages. Open a command prompt or terminal and run the following command:
+4. Your computer should have Python 3.x installed. You can download it from the [official Python website](https://www.python.org/downloads/).
+5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer
 
 ## Usage
 
-1. Connect your Android device to your computer and enable USB debugging.
-2. Launch the Dokkan Battle app on your Android device.
+1. Launch the Dokkan Battle app on your Android device and go to eza section
+2. Scroll down to the bottom of the EZA events, as the bot will change EZA events by swiping upwards.
 3. Open a terminal or command prompt in the project directory.
-4. Run the script with: `python main.py`
-5. Sit back and let the bot automate the EZA farming process for you.
+4. install the requirements
+  ```py
+  pip install -r requirements.txt
+  ```
+  And run 
+  ```
+  python main.py
+  ```
 
 ## Disclaimer
 
