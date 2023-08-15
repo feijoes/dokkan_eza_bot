@@ -30,7 +30,9 @@ If you encounter any errors or have any doubts, you can create an issue or conta
 4. Your computer should have Python 3.x installed. You can download it from the [official Python website](https://www.python.org/downloads/).
 5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer
 
-## Usage
+## Usage 
+
+### All EZAs (level 31)
 
 1. Launch the Dokkan Battle app on your Android device and go to eza section
 2. Scroll down to the bottom of the EZA events, as the bot will change EZA events by swiping upwards.
@@ -43,10 +45,22 @@ If you encounter any errors or have any doubts, you can create an issue or conta
   ```
   python main.py
   ```
-
+### Infinite Mode
+1. Launch the Dokkan Battle app on your Android device and go to eza section
+2. Select the EZA you want to farm infinitely
+3. Open a terminal or command prompt in the project directory.
+4. install the requirements
+  ```py
+  pip install -r requirements.txt
+  ```
+  And run 
+  ```
+  python main.py inf
+  ```
 ## Disclaimer
 
 This project is intended for educational and personal use only. The use of automation bots in games may violate the game's terms of service, and using this script may carry the risk of account suspension or banning. The developer of this project is not responsible for any consequences resulting from the use of this bot.
+
 
 ## Contributing
 
