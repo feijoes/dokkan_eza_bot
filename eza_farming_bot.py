@@ -220,23 +220,27 @@ def start():
                 sleep(1.5)
                 eza.click_center_screen()
             eza.ExitLevel()
-            os.system('cls' if os.name == 'nt' else 'clear')  
+            
         print("Change EZA")
         
         eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=2) 
+        os.system('cls' if os.name == 'nt' else 'clear')  
         
         
 def inf():
     device: AdbDevice = adb.device()
     eza = EZA(device)
+    n=0
     while True:
+        print(f"Current levels complete: {n}\n============================================")
+        n+=1
         sleep(0.5)
         eza.Fight()
         sleep(1)
         eza.Start()
         sleep(1)
         if not eza.End(50,raise_error=False):
-            print("lost batlle , change eza")
+            print("Lost batlle")
             break
         sleep(1.5)
         eza.OK()
@@ -246,6 +250,7 @@ def inf():
             eza.OK(trys=3,raise_error=False)
         sleep(1)
         eza.click_center_screen()
+        os.system('cls' if os.name == 'nt' else 'clear')  
  
              
         
