@@ -59,7 +59,7 @@ class EZA():
         for _ in range(trys):
             find, x_pos, y_pos = self._find_image_position(image_path)
             if find:
-                print(f"{PRINT_TEXT[image_path]}")
+                print(f"{PRINT_TEXT[image_path]}",end="\r")
                 self.device.click(x_pos-special, y_pos)
                 return True
             sleep(wait)
@@ -140,7 +140,7 @@ class EZA():
 
     def click_center_screen(self):
         x , y = self.device.window_size()
-        print("Clicking at the center of the screen.")
+        print("Clicking at the center of the screen.",end="\r")
         self.device.click(x / 2,y / 2)
         
     def get_level(self,debug=False, zone: int = 1)-> int:
@@ -167,7 +167,6 @@ class EZA():
         # Perform OCR on the thresholded image
         result: str = pytesseract.image_to_string(thresh_image, config="--psm 7 output digits")
         if result[0]:
-            print(result.split())
             return int(result.split()[0])
         cropped_image.save(f"ERROR_{datetime.datetime.now()}.jpeg")
         quit("Unknow Eza level")
@@ -185,17 +184,22 @@ class EZA():
         function()
         return True
         
-    
-       
+import os
+
 def start():
     
     device: AdbDevice = adb.device()
     eza = EZA(device)
+    n = 0
     while True:
+        print(f"Current levels complete: {n}")
+        print("============================================")
         sleep(0.5)
         level: int = eza.get_level()
         if level < 31:
-            print("Start eza")
+            n+=1
+            print("Start eza",end="\r")
+            
             eza.SelectLevel()
             for _ in range(31-level):
                 
@@ -204,7 +208,7 @@ def start():
                 sleep(1)
                 eza.Start()
                 sleep(1)
-                if not eza.End(50,raise_error=False):
+                if not eza.End(20,raise_error=False):
                     print("lost batlle , change eza")
                     break
                 sleep(1.5)
@@ -216,7 +220,9 @@ def start():
                 sleep(1.5)
                 eza.click_center_screen()
             eza.ExitLevel()
+            os.system('cls' if os.name == 'nt' else 'clear')  
         print("Change EZA")
+        
         eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=2) 
         
         
