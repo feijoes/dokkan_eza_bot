@@ -40,13 +40,17 @@ PRINT_TEXT = {
     "./Images/FIGHT.jpeg": "Click to start Fight",
     "./Images/FIGHT2.jpeg": "Click to start Fight",
     "./Images/START.jpeg": "Click to confirm battle",
-    "./Images/End.jpeg": "Check if battle ends",
+    "./Images/End.jpeg": "Battle ends",
     "./Images/OK.jpeg": "Click OK button",
     "./Images/CANCEL.jpeg": "CLick in Cancel button",
     "./Images/SELECT.jpeg": "CLick to select Eza",
     "./Images/EXIT.jpeg": "Click to exit eza"
 }   
-    
+import sys
+
+def delete_last_line():
+    sys.stdout.write('\x1b[1A')
+    sys.stdout.write('\x1b[2K')
 class EZA():
     
     def __init__(self, device: AdbDevice, start: int = 0, end: int = 30) -> None:
@@ -62,7 +66,12 @@ class EZA():
                 print(f"{PRINT_TEXT[image_path]}",end="\r")
                 self.device.click(x_pos-special, y_pos)
                 return True
-            sleep(wait)
+            
+            for i in range(1,wait+1):
+                if image_path == "./Images/End.jpeg":
+                    print("Waiting for the battle to end"+ "." * (i % 4))
+                    delete_last_line()
+                sleep(1)
         return False
     
     def _find(self, image_path: str, trys=20,wait:int=1):
@@ -122,7 +131,7 @@ class EZA():
         return True
     def End(self, trys=20, raise_error: bool=True):
         image_path = "./Images/End.jpeg"
-        if not self._find_and_click(image_path, trys,wait=20,special=100):
+        if not self._find_and_click(image_path, trys,wait=19,special=100):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
@@ -192,17 +201,16 @@ def start():
     eza = EZA(device)
     n = 0
     while True:
-        print(f"Current levels complete: {n}")
-        print("============================================")
+        
         sleep(0.5)
         level: int = eza.get_level()
         if level < 31:
-            n+=1
+        
             print("Start eza",end="\r")
-            
             eza.SelectLevel()
             for _ in range(31-level):
-                
+                print(f"Current levels complete: {n}")
+                print("============================================")
                 sleep(0.5)
                 eza.Fight()
                 sleep(1)
@@ -219,12 +227,14 @@ def start():
                     eza.OK(trys=3,raise_error=False)
                 sleep(1.5)
                 eza.click_center_screen()
+                n+=1
+                os.system('cls' if os.name == 'nt' else 'clear')  
             eza.ExitLevel()
             
         print("Change EZA")
         
-        eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=2) 
-        os.system('cls' if os.name == 'nt' else 'clear')  
+        eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=5) 
+        
         
         
 def inf():
