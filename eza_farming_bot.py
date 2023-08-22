@@ -79,10 +79,7 @@ class EZA():
                 return True
             
             for i in range(1,wait+1):
-                if image_path == "./Images/End.jpeg":
-                    print("Waiting for the battle to end"+ "." * (i % 4))  
-                else:
-                    print("Waiting loading"+ "." * (i % 4))
+                print("Waiting loading"+ "." * (i % 4))
                 delete_last_line()
                 sleep(1)
         return False
@@ -96,6 +93,35 @@ class EZA():
             sleep(wait)
         return False
 
+    def _find_dual_images(self, image_path_1: str, image_path_2: str, trys=20, wait=1):
+        """
+        Tries to find two images at the same time.
+        
+        :param image_path_1: Path to the first image to search for.
+        :param image_path_2: Path to the second image to search for.
+        :param trys: Number of attempts to find the images.
+        :param wait: Time to wait between attempts.
+        :return: If the first image is found, returns (0, [x1, y1]).
+                If the second image is found, returns (1, [x2, y2]).
+                If neither image is found, returns None.
+        """
+        for _ in range(trys):
+            find_1, x1, y1 = self._find_image_position(image_path_1)
+            find_2, x2, y2 = self._find_image_position(image_path_2)
+            
+            if find_1:
+                return 0, x1, y1
+            elif find_2:
+                return 1, x2, y2
+            
+            for i in range(1, wait + 1):
+                if image_path_1 == "./Images/End.jpeg":
+                    print("Waiting for the battle to end" + "." * (i % 4))
+                else:
+                    print("Waiting loading" + "." * (i % 4))
+                delete_last_line()
+                sleep(1)
+        return None
     def _find_image_position(self, image_path: str):
         screenshot = np.array(self.device.screenshot().convert('RGB'))
         template_image = cv2.imread(image_path)
@@ -142,12 +168,16 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def End(self, trys=20, raise_error: bool=True):
-        image_path = "./Images/End.jpeg"
-        if not self._find_and_click(image_path, trys,wait=19,special=100):
-            if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
-                error(f"Template {image_path} is not present in the target image.")
+    def End(self, trys=20):
+        image_path_1 = "./Images/End.jpeg"
+        image_path_2 =  "./Images/FIGHT2.jpeg"
+        battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=19)
+        if battle_end == None:
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            error(f"Template {image_path_1} or {image_path_2} is not present in the target image.")
+        elif battle_end[0] == 0:
+            self.device.click(battle_end[1]-100, battle_end[2])
+        elif battle_end[0] == 1:
             return False
         return True
     
@@ -175,7 +205,6 @@ class EZA():
             _, x , y = self._find_image_position("./Images/NEXT.jpeg")
             x1, y1, x2, y2 = x-40, y+40 , x+80, y + 100
         cropped_image = pil_image.crop((x1, y1, x2, y2))
-        print(self.device.window_size())
 
         # Convert the cropped image to grayscale
         gray_cropped_image = cropped_image.convert('L')
@@ -239,9 +268,10 @@ def start(debug:bool):
                 sleep(1)
                 eza.Start()
                 sleep(1)
-                if not eza.End(20,raise_error=False):
-                    print("batlle lost , change eza")
-                    break
+                
+                if not eza.End(15):
+                    print("Batlle lost , change eza")
+                    break 
                 sleep(1.5)
                 eza.OK()
                 sleep(1)
