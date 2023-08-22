@@ -8,7 +8,6 @@ The Dokkan Battle EZA Farming Bot is a Python script designed to automate the pr
 
 _This bot is no a autoclicker_; it not only completes the levels but also manages the current level of the EZA and switches between different EZAs.
 
-***This bot is still in beta version***
 
 If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
 
