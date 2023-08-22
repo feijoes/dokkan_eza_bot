@@ -19,7 +19,6 @@ def find_image_position(template_image: str,screenshot, threshold=0.8):
     target_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
 
-    # Perform template matching
     result = cv2.matchTemplate(target_gray, template_gray, cv2.TM_CCOEFF_NORMED)
    
     # Get the maximum correlation value and its location
@@ -53,8 +52,9 @@ PRINT_TEXT = {
     "./Images/End.jpeg": "Battle ends",
     "./Images/OK.jpeg": "Click OK button",
     "./Images/CANCEL.jpeg": "CLick in Cancel button",
-    "./Images/SELECT.jpeg": "CLick to select Eza",
-    "./Images/EXIT.jpeg": "Click to exit eza"
+    "./Images/EZA.jpeg": "CLick to select EZA",
+    "./Images/EXIT.jpeg": "Click to exit EZA",
+    "./Images/LREZA.jpeg":"CLick to select LR EZA",
 }   
 
 import sys
@@ -101,8 +101,8 @@ class EZA():
         template_image = cv2.imread(image_path)
         return find_image_position(template_image,screenshot)
 
-    def SelectLevel(self, trys=20, raise_error: bool=True):
-        image_path = "./Images/SELECT.jpeg"
+    def SelectLevel(self, isLREZA: bool ,trys=20, raise_error: bool=True):
+        image_path = "./Images/EZA.jpeg" if not isLREZA else "./Images/LREZA.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
@@ -226,7 +226,7 @@ def start():
         if level < maxlevel:
         
             print("Start eza",end="\r")
-            eza.SelectLevel()
+            eza.SelectLevel(isLREZA=maxlevel==11)
             for _ in range(maxlevel-level):
                 print(f"Current levels complete: {n}")
                 print("============================================")
@@ -252,7 +252,7 @@ def start():
             
         print("Change EZA")
         
-        eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=5) 
+        eza.WaitUntil("./Images/EZA.jpeg",function=eza.Swipe, wait=5) 
         
         
 
