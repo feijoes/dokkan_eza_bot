@@ -168,14 +168,14 @@ class EZA():
     def get_level(self, zone: int = 1)-> int:
         screenshot = np.array(self.device.screenshot())
         pil_image = Image.fromarray(screenshot)
-
+        
         # Crop the image to the specified region of interest
         if zone == 1: x1, y1, x2, y2 = 890, 570, 1010, 630
         else:
-            x , y = self.device.window_size()
-            center_x, center_y = x//2, y //2
-            x1, y1, x2, y2 = center_x-100, center_y+335 , center_x+110, center_y + 458
+            _, x , y = self._find_image_position("./Images/NEXT.jpeg")
+            x1, y1, x2, y2 = x-40, y+40 , x+80, y + 100
         cropped_image = pil_image.crop((x1, y1, x2, y2))
+        print(self.device.window_size())
 
         # Convert the cropped image to grayscale
         gray_cropped_image = cropped_image.convert('L')
@@ -224,8 +224,8 @@ def start(debug:bool):
     n = 0
     while True:
         sleep(0.5)
-        level: int = eza.get_level()
-        continue
+        # if error in  get_level() change number to 1
+        level: int = eza.get_level(2)
         maxlevel = 11 if eza.isLR() else 31
         if level < maxlevel:
         
