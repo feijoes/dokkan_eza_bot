@@ -35,7 +35,17 @@ def find_image_position(template_image: str,screenshot, threshold=0.8):
         return True, center_x, center_y
     else:
         return False, None, None
+    
+def find_image_in_another(source_image, template, threshold:int=0.8) -> bool:
+    result = cv2.matchTemplate(source_image, template, cv2.TM_CCOEFF_NORMED)
+    _, max_val, _, _ = cv2.minMaxLoc(result)
+    if max_val >= threshold:
+        return True
+    else:
+        return False
 
+
+# Path to the source image and the template image
 PRINT_TEXT = { 
     "./Images/FIGHT.jpeg": "Click to start Fight",
     "./Images/FIGHT2.jpeg": "Click to start Fight",
@@ -46,6 +56,7 @@ PRINT_TEXT = {
     "./Images/SELECT.jpeg": "CLick to select Eza",
     "./Images/EXIT.jpeg": "Click to exit eza"
 }   
+
 import sys
 
 def delete_last_line():
@@ -69,8 +80,10 @@ class EZA():
             
             for i in range(1,wait+1):
                 if image_path == "./Images/End.jpeg":
-                    print("Waiting for the battle to end"+ "." * (i % 4))
-                    delete_last_line()
+                    print("Waiting for the battle to end"+ "." * (i % 4))  
+                else:
+                    print("Waiting loading"+ "." * (i % 4))
+                delete_last_line()
                 sleep(1)
         return False
     
@@ -140,7 +153,7 @@ class EZA():
     
     def Cancel(self, trys=20, raise_error: bool=True):
         image_path = "./Images/CANCEL.jpeg"
-        if not self._find_and_click(image_path, trys,wait=20,special=100):
+        if not self._find_and_click(image_path, trys,wait=5,special=100):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
@@ -192,6 +205,12 @@ class EZA():
             return False
         function()
         return True
+    
+    def isLR(self)-> bool:
+        screenshot = np.array(self.device.screenshot().convert('RGB'))
+        template_image = cv2.imread("./Images/LREZA.jpeg")
+        return find_image_in_another(template_image, screenshot, 0.63)
+        
         
 import os
 
@@ -201,14 +220,14 @@ def start():
     eza = EZA(device)
     n = 0
     while True:
-        
         sleep(0.5)
         level: int = eza.get_level()
-        if level < 31:
+        maxlevel = 11 if eza.isLR() else 31
+        if level < maxlevel:
         
             print("Start eza",end="\r")
             eza.SelectLevel()
-            for _ in range(31-level):
+            for _ in range(maxlevel-level):
                 print(f"Current levels complete: {n}")
                 print("============================================")
                 sleep(0.5)
@@ -217,14 +236,14 @@ def start():
                 eza.Start()
                 sleep(1)
                 if not eza.End(20,raise_error=False):
-                    print("lost batlle , change eza")
+                    print("batlle lost , change eza")
                     break
                 sleep(1.5)
                 eza.OK()
                 sleep(1)
                 if not eza.Cancel(trys=1,raise_error=False):
                     eza.OK()
-                    eza.OK(trys=3,raise_error=False)
+                    eza.OK(trys=2,raise_error=False)
                 sleep(1.5)
                 eza.click_center_screen()
                 n+=1
@@ -236,7 +255,7 @@ def start():
         eza.WaitUntil("./Images/SELECT.jpeg",function=eza.Swipe, wait=5) 
         
         
-        
+
 def inf():
     device: AdbDevice = adb.device()
     eza = EZA(device)
@@ -250,7 +269,7 @@ def inf():
         eza.Start()
         sleep(1)
         if not eza.End(50,raise_error=False):
-            print("Lost batlle")
+            print("Batlle lost")
             break
         sleep(1.5)
         eza.OK()
@@ -261,10 +280,7 @@ def inf():
         sleep(1)
         eza.click_center_screen()
         os.system('cls' if os.name == 'nt' else 'clear')  
- 
-             
-        
-  
+
             
         
         
