@@ -4,8 +4,9 @@ if __name__ == "__main__":
     print("###   Program starting   ###\n")
     if "inf" in sys.argv:
         eza_farming_bot.inf()
-    else: 
-        eza_farming_bot.start()
+    else:
+        debug_mode = "debug" in sys.argv
+        eza_farming_bot.start(debug=debug_mode)
 
     
     

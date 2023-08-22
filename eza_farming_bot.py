@@ -62,12 +62,12 @@ import sys
 def delete_last_line():
     sys.stdout.write('\x1b[1A')
     sys.stdout.write('\x1b[2K')
+    
 class EZA():
     
-    def __init__(self, device: AdbDevice, start: int = 0, end: int = 30) -> None:
+    def __init__(self, device: AdbDevice, debug: bool=False) -> None:
         self.device = device
-        self.start = start
-        self.end = end
+        self.debug = debug
 
     def _find_and_click(self, image_path: str, trys=20,wait:int=1,special=0):
         """Return True if success else False """
@@ -165,7 +165,7 @@ class EZA():
         print("Clicking at the center of the screen.",end="\r")
         self.device.click(x / 2,y / 2)
         
-    def get_level(self,debug=False, zone: int = 1)-> int:
+    def get_level(self, zone: int = 1)-> int:
         screenshot = np.array(self.device.screenshot())
         pil_image = Image.fromarray(screenshot)
 
@@ -184,10 +184,13 @@ class EZA():
         thresh_image = cv2.threshold(src=np.array(gray_cropped_image), thresh=0, maxval=255, type=cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)[1]
         
         # Display the cropped image for testing
-        if debug: cropped_image.show()
+        
 
         # Perform OCR on the thresholded image
         result: str = pytesseract.image_to_string(thresh_image, config="--psm 7 output digits")
+        if self.debug: 
+            print(result)
+            cropped_image.show()
         if result[0]:
             return int(result.split()[0])
         cropped_image.save(f"ERROR_{datetime.datetime.now()}.jpeg")
@@ -214,14 +217,15 @@ class EZA():
         
 import os
 
-def start():
+def start(debug:bool):
     
     device: AdbDevice = adb.device()
-    eza = EZA(device)
+    eza = EZA(device,debug=debug)
     n = 0
     while True:
         sleep(0.5)
         level: int = eza.get_level()
+        continue
         maxlevel = 11 if eza.isLR() else 31
         if level < maxlevel:
         
