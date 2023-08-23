@@ -69,7 +69,7 @@ class EZA():
         self.device = device
         self.debug = debug
 
-    def _find_and_click(self, image_path: str, trys=20,wait:int=1,special=0):
+    def _find_and_click(self, image_path: str, trys=30,wait:int=1,special=0):
         """Return True if success else False """
         for _ in range(trys):
             find, x_pos, y_pos = self._find_image_position(image_path)
@@ -84,7 +84,7 @@ class EZA():
                 sleep(1)
         return False
     
-    def _find(self, image_path: str, trys=20,wait:int=1):
+    def _find(self, image_path: str, trys=30,wait:int=1):
         """Return True if success else False """
         for _ in range(trys):
             find, _, _ = self._find_image_position(image_path)
@@ -93,7 +93,7 @@ class EZA():
             sleep(wait)
         return False
 
-    def _find_dual_images(self, image_path_1: str, image_path_2: str, trys=20, wait=1):
+    def _find_dual_images(self, image_path_1: str, image_path_2: str, trys=30, wait=1):
         """
         Tries to find two images at the same time.
         
@@ -101,8 +101,8 @@ class EZA():
         :param image_path_2: Path to the second image to search for.
         :param trys: Number of attempts to find the images.
         :param wait: Time to wait between attempts.
-        :return: If the first image is found, returns (0, [x1, y1]).
-                If the second image is found, returns (1, [x2, y2]).
+        :return: If the first image is found, returns (0, x1, y1).
+                If the second image is found, returns (1, x2, y2).
                 If neither image is found, returns None.
         """
         for _ in range(trys):
@@ -127,7 +127,7 @@ class EZA():
         template_image = cv2.imread(image_path)
         return find_image_position(template_image,screenshot)
 
-    def SelectLevel(self, isLREZA: bool ,trys=20, raise_error: bool=True):
+    def SelectLevel(self, isLREZA: bool ,trys=30, raise_error: bool=True):
         image_path = "./Images/EZA.jpeg" if not isLREZA else "./Images/LREZA.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
@@ -135,7 +135,7 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def ExitLevel(self, trys=20, raise_error: bool=True):
+    def ExitLevel(self, trys=30, raise_error: bool=True):
         image_path = "./Images/EXIT.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
@@ -143,7 +143,7 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def Fight(self, trys=20, raise_error: bool=True):
+    def Fight(self, trys=30, raise_error: bool=True):
         image_path = "./Images/FIGHT2.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
@@ -151,7 +151,7 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def Start(self, trys=20, raise_error: bool=True):
+    def Start(self, trys=30, raise_error: bool=True):
         image_path = "./Images/START.jpeg"
         if not self._find_and_click(image_path, trys):
             
@@ -160,7 +160,7 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def OK(self, trys=20, raise_error: bool=True):
+    def OK(self, trys=30, raise_error: bool=True):
         image_path = "./Images/OK.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
@@ -168,7 +168,7 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def End(self, trys=20):
+    def End(self, trys=30):
         image_path_1 = "./Images/End.jpeg"
         image_path_2 =  "./Images/FIGHT2.jpeg"
         battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=19)
@@ -181,7 +181,7 @@ class EZA():
             return False
         return True
     
-    def Cancel(self, trys=20, raise_error: bool=True):
+    def Cancel(self, trys=30, raise_error: bool=True):
         image_path = "./Images/CANCEL.jpeg"
         if not self._find_and_click(image_path, trys,wait=5,special=100):
             if raise_error:
@@ -203,7 +203,10 @@ class EZA():
         if zone == 1: x1, y1, x2, y2 = 890, 570, 1010, 630
         else:
             _, x , y = self._find_image_position("./Images/NEXT.jpeg")
-            x1, y1, x2, y2 = x-40, y+40 , x+80, y + 100
+            if not x:
+                x1, y1, x2, y2 = 890, 570, 1010, 630
+            else:
+                x1, y1, x2, y2 = x-40, y+40 , x+80, y + 100
         cropped_image = pil_image.crop((x1, y1, x2, y2))
 
         # Convert the cropped image to grayscale
@@ -269,7 +272,7 @@ def start(debug:bool):
                 eza.Start()
                 sleep(1)
                 
-                if not eza.End(15):
+                if not eza.End(35):
                     print("Batlle lost , change eza")
                     break 
                 sleep(1.5)
@@ -302,7 +305,7 @@ def inf():
         sleep(1)
         eza.Start()
         sleep(1)
-        if not eza.End(50,raise_error=False):
+        if not eza.End(50):
             print("Batlle lost")
             break
         sleep(1.5)
