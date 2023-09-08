@@ -168,10 +168,10 @@ class EZA():
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
-    def End(self, trys=30):
+    def End(self, trys=45):
         image_path_1 = "./Images/End.jpeg"
         image_path_2 =  "./Images/FIGHT2.jpeg"
-        battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=19)
+        battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=13)
         if battle_end == None:
             self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
             error(f"Template {image_path_1} or {image_path_2} is not present in the target image.")
@@ -183,7 +183,7 @@ class EZA():
     
     def Cancel(self, trys=30, raise_error: bool=True):
         image_path = "./Images/CANCEL.jpeg"
-        if not self._find_and_click(image_path, trys,wait=5,special=100):
+        if not self._find_and_click(image_path, trys,wait=5,special=self.device.window_size()[0] // 4):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
@@ -208,7 +208,7 @@ class EZA():
             else:
                 x1, y1, x2, y2 = x-40, y+40 , x+80, y + 100
         cropped_image = pil_image.crop((x1, y1, x2, y2))
-
+        
         # Convert the cropped image to grayscale
         gray_cropped_image = cropped_image.convert('L')
 
@@ -257,6 +257,7 @@ def start(debug:bool):
     while True:
         sleep(0.5)
         # if error in  get_level() change number to 1
+        
         level: int = eza.get_level(2)
         maxlevel = 11 if eza.isLR() else 31
         if level < maxlevel:
@@ -289,7 +290,7 @@ def start(debug:bool):
             
         print("Change EZA")
         
-        eza.WaitUntil("./Images/EZA.jpeg",function=eza.Swipe, wait=5) 
+        eza.WaitUntil("./Images/EZA.jpeg",trys=30,function=eza.Swipe, wait=5) 
         
         
 
@@ -313,7 +314,7 @@ def inf():
         sleep(1)
         if not eza.Cancel(trys=1,raise_error=False):
             eza.OK()
-            eza.OK(trys=3,raise_error=False)
+            eza.OK(trys=2,raise_error=False)
         sleep(1)
         eza.click_center_screen()
         os.system('cls' if os.name == 'nt' else 'clear')  
