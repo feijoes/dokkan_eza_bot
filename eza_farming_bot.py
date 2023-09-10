@@ -312,7 +312,7 @@ def inf():
         sleep(1.5)
         eza.OK()
         sleep(1)
-        if not eza.Cancel(trys=3):
+        if not eza.Cancel(trys=3, raise_error=False):
             print("not found cancel")
             eza.OK()
             eza.OK(trys=2,raise_error=False)
