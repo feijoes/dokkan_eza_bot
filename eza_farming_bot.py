@@ -176,14 +176,14 @@ class EZA():
             self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
             error(f"Template {image_path_1} or {image_path_2} is not present in the target image.")
         elif battle_end[0] == 0:
-            self.device.click(battle_end[1]-100, battle_end[2])
+            self.device.click(battle_end[1]-150, battle_end[2])
         elif battle_end[0] == 1:
             return False
         return True
     
     def Cancel(self, trys=30, raise_error: bool=True):
         image_path = "./Images/CANCEL.jpeg"
-        if not self._find_and_click(image_path, trys,wait=5,special=self.device.window_size()[0] // 4):
+        if not self._find_and_click(image_path, trys,wait=5):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
@@ -279,7 +279,7 @@ def start(debug:bool):
                 sleep(1.5)
                 eza.OK()
                 sleep(1)
-                if not eza.Cancel(trys=1,raise_error=False):
+                if not eza.Cancel(trys=2,raise_error=False):
                     eza.OK()
                     eza.OK(trys=2,raise_error=False)
                 sleep(1.5)
@@ -307,12 +307,13 @@ def inf():
         eza.Start()
         sleep(1)
         if not eza.End(50):
-            print("Batlle lost")
+            print("Battle lost")
             break
         sleep(1.5)
         eza.OK()
         sleep(1)
-        if not eza.Cancel(trys=1,raise_error=False):
+        if not eza.Cancel(trys=3):
+            print("not found cancel")
             eza.OK()
             eza.OK(trys=2,raise_error=False)
         sleep(1)
