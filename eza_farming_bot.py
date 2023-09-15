@@ -18,14 +18,13 @@ def find_image_position(template_image: str,screenshot, threshold=0.8):
     # Convert both images to grayscale
     target_gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
-
+    
     result = cv2.matchTemplate(target_gray, template_gray, cv2.TM_CCOEFF_NORMED)
    
     # Get the maximum correlation value and its location
     _, max_val, _, max_loc = cv2.minMaxLoc(result)
     
     # Check if the maximum correlation value is greater than the threshold
- 
     if max_val >= threshold:
         h, w = template_gray.shape
         x, y = max_loc
@@ -35,7 +34,7 @@ def find_image_position(template_image: str,screenshot, threshold=0.8):
     else:
         return False, None, None
     
-def find_image_in_another(source_image, template, threshold:int=0.8) -> bool:
+def find_image_in_another(source_image, template, threshold:int=0.3) -> bool:
     result = cv2.matchTemplate(source_image, template, cv2.TM_CCOEFF_NORMED)
     _, max_val, _, _ = cv2.minMaxLoc(result)
     if max_val >= threshold:
@@ -131,7 +130,7 @@ class EZA():
         image_path = "./Images/EZA.jpeg" if not isLREZA else "./Images/LREZA.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
@@ -139,7 +138,7 @@ class EZA():
         image_path = "./Images/EXIT.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
@@ -147,7 +146,7 @@ class EZA():
         image_path = "./Images/FIGHT2.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
@@ -156,7 +155,7 @@ class EZA():
         if not self._find_and_click(image_path, trys):
             
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
@@ -164,16 +163,16 @@ class EZA():
         image_path = "./Images/OK.jpeg"
         if not self._find_and_click(image_path, trys):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
     def End(self, trys=45):
         image_path_1 = "./Images/End.jpeg"
         image_path_2 =  "./Images/FIGHT2.jpeg"
-        battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=13)
+        battle_end = self._find_dual_images(image_path_1, image_path_2, trys, wait=10)
         if battle_end == None:
-            self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+            self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
             error(f"Template {image_path_1} or {image_path_2} is not present in the target image.")
         elif battle_end[0] == 0:
             self.device.click(battle_end[1]-150, battle_end[2])
@@ -185,7 +184,7 @@ class EZA():
         image_path = "./Images/CANCEL.jpeg"
         if not self._find_and_click(image_path, trys,wait=5):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         return True
@@ -225,7 +224,7 @@ class EZA():
             cropped_image.show()
         if result[0]:
             return int(result.split()[0])
-        cropped_image.save(f"ERROR_{datetime.datetime.now()}.jpeg")
+        cropped_image.save(f"ERROR_{datetime.datetime.now().minute}.jpeg")
         quit("Unknow Eza level")
     
     def Swipe(self):
@@ -235,7 +234,7 @@ class EZA():
     def WaitUntil(self, image_path: str, function: Callable[[], None], wait:int, trys=10, raise_error: bool=True):
         if not self._find(image_path, trys, wait):
             if raise_error:
-                self.device.screenshot().save(f"ERROR_{datetime.datetime.now()}.jpeg")
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 error(f"Template {image_path} is not present in the target image.")
             return False
         function()
@@ -296,12 +295,15 @@ def start(debug:bool):
 
 def inf():
     device: AdbDevice = adb.device()
+    
     eza = EZA(device)
+    
     n=0
     while True:
         print(f"Current levels complete: {n}\n============================================")
         n+=1
         sleep(0.5)
+       
         eza.Fight()
         sleep(1)
         eza.Start()
@@ -312,7 +314,7 @@ def inf():
         sleep(1.5)
         eza.OK()
         sleep(1)
-        if not eza.Cancel(trys=3, raise_error=False):
+        if not eza.Cancel(trys=2, raise_error=False):
             print("not found cancel")
             eza.OK()
             eza.OK(trys=2,raise_error=False)
