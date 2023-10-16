@@ -293,7 +293,7 @@ def start(debug:bool):
         
         
 
-def inf():
+def inf(no_lost:bool):
     device: AdbDevice = adb.device()
     
     eza = EZA(device)
@@ -310,7 +310,8 @@ def inf():
         sleep(1)
         if not eza.End(50):
             print("Battle lost")
-            break
+            if not no_lost:
+                break
         sleep(1.5)
         eza.OK()
         sleep(1)
