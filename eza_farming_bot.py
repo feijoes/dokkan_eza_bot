@@ -312,6 +312,7 @@ def inf(no_lost:bool):
             print("Battle lost")
             if not no_lost:
                 break
+            continue
         sleep(1.5)
         eza.OK()
         sleep(1)
