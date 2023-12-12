@@ -276,7 +276,7 @@ def start(debug:bool):
                     print("Batlle lost , change eza")
                     break 
                 sleep(1.5)
-                eza.OK()
+               
                 sleep(1)
                 if not eza.Cancel(trys=2,raise_error=False):
                     eza.OK()
