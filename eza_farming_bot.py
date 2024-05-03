@@ -50,6 +50,7 @@ PRINT_TEXT = {
     "./Images/START.jpeg": "Click to confirm battle",
     "./Images/End.jpeg": "Battle ends",
     "./Images/OK.jpeg": "Click OK button",
+    "./Images/OK2.jpeg": "Click OK button",
     "./Images/CANCEL.jpeg": "CLick in Cancel button",
     "./Images/EZA.jpeg": "CLick to select EZA",
     "./Images/EXIT.jpeg": "Click to exit EZA",
@@ -61,8 +62,23 @@ import sys
 def delete_last_line():
     sys.stdout.write('\x1b[1A')
     sys.stdout.write('\x1b[2K')
+
     
 class EZA():
+
+    def OK2(self, trys=30, raise_error: bool=True):
+        image_path = "./Images/OK2.jpeg"
+        if not self._find_and_click(image_path, trys):
+            if raise_error:
+                self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
+                error(f"Template {image_path} is not present in the target image.")
+            return False
+        return True
+
+    def handle_friend_request(self):
+        if not self.OK2(trys=2, raise_error=False):
+            print("Fallback to generic OK")
+            self.OK(trys=2, raise_error=False)
     
     def __init__(self, device: AdbDevice, debug: bool=False) -> None:
         self.device = device
@@ -219,13 +235,17 @@ class EZA():
 
         # Perform OCR on the thresholded image
         result: str = pytesseract.image_to_string(thresh_image, config="--psm 7 output digits")
-        if self.debug: 
-            print(result)
+        cleaned_result = ''.join(filter(str.isdigit, result))
+        if self.debug:
+            print(f"OCR Result: {result}, Cleaned Result: {cleaned_result}")
             cropped_image.show()
-        if result[0]:
-            return int(result.split()[0])
-        cropped_image.save(f"ERROR_{datetime.datetime.now().minute}.jpeg")
-        quit("Unknow Eza level")
+    
+        if cleaned_result:
+            return int(cleaned_result)
+        else:
+            # Save an error image if OCR fails to detect digits correctly
+            cropped_image.save(f"ERROR_{datetime.datetime.now().minute}.jpeg")
+            quit(f"Unknown EZA level: Original OCR result '{result}' cleaned to '{cleaned_result}'")
     
     def Swipe(self):
         x , y = self.device.window_size()
@@ -249,21 +269,17 @@ class EZA():
 import os
 
 def start(debug:bool):
-    
     device: AdbDevice = adb.device()
     eza = EZA(device,debug=debug)
     n = 0
     while True:
         sleep(0.5)
-        # if error in  get_level() change number to 1
-        
         level: int = eza.get_level(2)
         maxlevel = 11 if eza.isLR() else 31
         if level < maxlevel:
-        
-            print("Start eza",end="\r")
+            print("Start eza", end="\r")
             eza.SelectLevel(isLREZA=maxlevel==11)
-            for _ in range(maxlevel-level):
+            for _ in range(maxlevel - level):
                 print(f"Current levels complete: {n}")
                 print("============================================")
                 sleep(0.5)
@@ -271,26 +287,23 @@ def start(debug:bool):
                 sleep(1)
                 eza.Start()
                 sleep(1)
-                
                 if not eza.End(35):
-                    print("Batlle lost , change eza")
-                    break 
+                    print("Battle lost, change eza")
+                    break
                 sleep(1.5)
-               
+                eza.OK()
                 sleep(1)
-                if not eza.Cancel(trys=2,raise_error=False):
-                    eza.OK()
-                    eza.OK(trys=2,raise_error=False)
+                if not eza.Cancel(trys=2, raise_error=False):
+                    eza.handle_friend_request()
                 sleep(1.5)
                 eza.click_center_screen()
-                n+=1
+                n += 1
                 os.system('cls' if os.name == 'nt' else 'clear')  
             eza.ExitLevel()
-            
+        
         print("Change EZA")
-        
-        eza.WaitUntil("./Images/EZA.jpeg",trys=30,function=eza.Swipe, wait=5) 
-        
+        eza.WaitUntil("./Images/EZA.jpeg", trys=30, function=eza.Swipe, wait=5) 
+
         
 
 def inf(no_lost:bool):
@@ -317,9 +330,7 @@ def inf(no_lost:bool):
         eza.OK()
         sleep(1)
         if not eza.Cancel(trys=2, raise_error=False):
-            print("not found cancel")
-            eza.OK()
-            eza.OK(trys=2,raise_error=False)
+            eza.handle_friend_request()
         sleep(1)
         eza.click_center_screen()
         os.system('cls' if os.name == 'nt' else 'clear')  
