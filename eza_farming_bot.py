@@ -178,7 +178,8 @@ class EZA():
     @retry(retries=3, wait=1)
     def ExitLevel(self, trys=30, raise_error: bool=True):
         """Exit level with retries on fail."""
-        if not self._find_and_click("./Images/EXIT.jpeg", trys):
+        image_path = "./Images/EXIT.jpeg"
+        if not self._find_and_click(image_path, trys):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 log_error(f"Template {image_path} is not present in the target image.")
@@ -210,7 +211,8 @@ class EZA():
     @retry(retries=3, wait=1)
     def OK(self, trys=30, raise_error: bool=True):
         """Click OK with retries."""
-        if not self._find_and_click("./Images/OK.jpeg", trys):
+        image_path = "./Images/OK.jpeg"
+        if not self._find_and_click(image_path, trys):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 log_error(f"Template {image_path} is not present in the target image.")
@@ -232,7 +234,8 @@ class EZA():
     @retry(retries=3, wait=1)
     def Cancel(self, trys=30, raise_error: bool=True):
         """Attempt to cancel with retry logic."""
-        if not self._find_and_click("./Images/CANCEL.jpeg", trys, wait=5):
+        image_path = "./Images/CANCEL.jpeg"
+        if not self._find_and_click(image_path, trys, wait=5):
             if raise_error:
                 self.device.screenshot().save(f"ERROR_{datetime.datetime.now().strftime('%H_%M_%S')}.jpeg")
                 log_error(f"Template {image_path} is not present in the target image.")
@@ -331,9 +334,7 @@ def start(debug:bool):
 
 def inf(no_lost:bool):
     device: AdbDevice = adb.device()
-    
     eza = EZA(device)
-    
     n=0
     while True:
         print(f"Current levels complete: {n}\n============================================")
@@ -357,15 +358,3 @@ def inf(no_lost:bool):
         time.sleep(1)
         eza.click_center_screen()
         os.system('cls' if os.name == 'nt' else 'clear') 
-        
-        
-        
-        
-        
-   
-        
-        
-        
-
-    
-""""""
