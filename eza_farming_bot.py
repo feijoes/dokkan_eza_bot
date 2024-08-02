@@ -353,7 +353,7 @@ def inf(no_lost:bool):
         time.sleep(1.5)
         eza.OK()
         time.sleep(1)
-        if not eza.Cancel(trys=2, raise_error=False):
+        if not eza.Cancel(trys=3, raise_error=False):
             eza.handle_friend_request()
         time.sleep(1)
         eza.click_center_screen()
