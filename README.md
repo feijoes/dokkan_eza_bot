@@ -8,10 +8,6 @@
 
 The Dokkan Battle EZA Farming Bot is a Python script designed to automate the process of farming the Extreme Z-Awakening levels in Dragon Ball Z Dokkan Battle. The script runs on your computer and interacts with the game on your phone.
 
-_This bot is no a autoclicker_; it not only completes the levels but also manages the current level of the EZA and switches between different EZAs.
-
-
-
 If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
 
 ## Features
@@ -19,6 +15,8 @@ If you encounter any errors or have any doubts, you can create an issue or conta
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
 - It identifies buttons and actions using images, so it can adapt to different screen sizes and resolutions.
 - Can swipe bettwen eza and only 
+
+***Tip***: If the bot doesn’t seem to be working correctly, particularly if it's failing to detect buttons or actions in the game, try replacing the images in the script with screenshots from your own game setup. These images are used to identify in-game elements, and if your screen layout differs, custom screenshots may improve accuracy.
 
 ## Requirements
 
@@ -65,11 +63,3 @@ This project is intended for educational and personal use only. The use of autom
 ## Contributing
 
 Contributions to this project are welcome! If you encounter any issues, have suggestions for improvements, or want to add new features, feel free to open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-Feel free to modify the README according to your project's specific details, and don't forget to add a proper license file (e.g., `LICENSE`) to your project if you plan to share it with others.

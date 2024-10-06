@@ -1,2 +1,5 @@
 __pycache__
 venv
+.ruff_cache
+error_log.txt
+error/*
