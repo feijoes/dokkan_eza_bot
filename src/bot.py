@@ -10,7 +10,8 @@ from .utils import (
     log_error,
     delete_last_line,
 )
-with open('messages.json', 'r') as f:
+
+with open("messages.json", "r") as f:
     PRINT_TEXT = json.load(f)
 
 
@@ -54,10 +55,10 @@ class Bot:
         image1 = cv2.imread(image_path1)
         image2 = cv2.imread(image_path2)
         for _ in range(trys):
-            screenshot = np.array(self.device.screenshot().convert("RGB"), dtype=np.uint8)
-            result = self.img_processor.find_dual_images(
-                image1, image2, screenshot
+            screenshot = np.array(
+                self.device.screenshot().convert("RGB"), dtype=np.uint8
             )
+            result = self.img_processor.find_dual_images(image1, image2, screenshot)
             if result[0] != -1:
                 return result
             time.sleep(wait)

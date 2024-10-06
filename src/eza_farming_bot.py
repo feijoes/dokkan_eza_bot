@@ -4,10 +4,10 @@ from .bot import Bot
 from PIL import Image
 from .utils import log_error, retry
 import cv2
-import datetime
 import numpy as np
 import os
 import time
+
 
 class EZA(Bot):
     @retry(retries=3)
@@ -40,7 +40,7 @@ class EZA(Bot):
     def Cancel(self, raise_error: bool = True):
         """Attempt to cancel with retry logic."""
         return self._perform_action("./Images/CANCEL.jpeg", raise_error=False)
-    
+
     @retry(retries=3)
     def End(self, raize_error: bool = True):
         """Handle end of battle with retry logic."""
@@ -83,8 +83,6 @@ class EZA(Bot):
         return self.img_processor.find_image_in_another(
             template_image, screenshot, 0.63
         )
-
-  
 
 
 def start(debug: bool):
@@ -142,7 +140,7 @@ def inf(no_lost: bool):
         time.sleep(1)
         eza.Start()
         time.sleep(1)
-        print('Waiting battle to end')
+        print("Waiting battle to end")
         if not eza.End():
             print("Battle lost")
             if not no_lost:

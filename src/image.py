@@ -47,7 +47,7 @@ class ImageProcessor:
         - (1, x2, y2) if the second image is found,
         - (-1, None, None) if neither image is found after all attempts.
         """
-        
+
         find_1, x1, y1 = self.find_image_position(image1, screenshot, threshold)
         find_2, x2, y2 = self.find_image_position(image2, screenshot, threshold)
         if find_1:

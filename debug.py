@@ -24,7 +24,9 @@ class Debug:
 screenshot = np.array(device.screenshot().convert("RGB"), dtype=np.uint8)
 template_image = cv2.imread(image_path)
 
-found, x, y = image_processor.find_image_position(template_image, screenshot, threshold=0.8)
+found, x, y = image_processor.find_image_position(
+    template_image, screenshot, threshold=0.8
+)
 
 if found:
     Debug.draw_rectangle_around_match(screenshot, (x, y), *template_image.shape[:2])
