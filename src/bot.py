@@ -107,3 +107,13 @@ class Bot:
                 self._handle_error(image_path)
             return False
         return True
+
+    def _perform_actionFaster(
+            self, image_path: str, trys=3, raise_error: bool = True
+    ) -> bool:
+        """Perform an action by finding and clicking the image, with retries and error handling."""
+        if not self._find_and_click(image_path, trys):
+            if raise_error:
+                self._handle_error(image_path)
+            return False
+        return True

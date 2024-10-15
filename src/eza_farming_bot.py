@@ -36,10 +36,9 @@ class EZA(Bot):
         """Click OK with retries."""
         self._perform_action("./Images/OK.jpeg", raise_error=raise_error)
 
-    @retry(retries=2)
     def Cancel(self, raise_error: bool = True):
         """Attempt to cancel with retry logic."""
-        return self._perform_action("./Images/CANCEL.jpeg", raise_error=False)
+        return self._perform_actionFaster("./Images/CANCEL.jpeg", raise_error=False)
 
     @retry(retries=3)
     def End(self, raize_error: bool = True):
