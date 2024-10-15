@@ -139,7 +139,7 @@ def inf(no_lost: bool):
         time.sleep(1)
         eza.Start()
         time.sleep(1)
-        print("Waiting battle to end")
+        print("Waiting for battle to end")
         if not eza.End():
             print("Battle lost")
             if not no_lost:
