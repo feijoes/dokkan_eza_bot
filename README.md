@@ -26,7 +26,7 @@ If you encounter any errors or have any doubts, you can create an issue or conta
       * **USB Debbuging**
 
 4. Your computer should have Python 3.x installed. You can download it from the [official Python website](https://www.python.org/downloads/).
-5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer
+5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer (required for Normal mode, optional for INF mode)
 
 ## Usage 
 ***WARNING*** the normal mode maybe outdate, use the Infinite Mode for now
