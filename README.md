@@ -14,7 +14,7 @@ If you encounter any errors or have any doubts, you can create an issue or conta
 
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
 - It identifies buttons and actions using images, so it can adapt to different screen sizes and resolutions.
-- Can swipe bettwen eza and only 
+- Can swipe bettwen eza
 
 ***Tip***: If the bot doesn’t seem to be working correctly, particularly if it's failing to detect buttons or actions in the game, try replacing the images in the script with screenshots from your own game setup. These images are used to identify in-game elements, and if your screen layout differs, custom screenshots may improve accuracy.
 
