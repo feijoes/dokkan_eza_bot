@@ -8,7 +8,7 @@
 
 The Dokkan Battle EZA Farming Bot is a Python script designed to automate the process of farming the Extreme Z-Awakening levels in Dragon Ball Z Dokkan Battle. The script runs on your computer and interacts with the game on your phone.
 
-If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
+If you encounter any errors or have any doubts, feel free to create an issue or contact me at pcaladomoura@gmail.com or on Discord at feijao6054.
 
 ## Features
 
