@@ -55,6 +55,15 @@ If you encounter any errors or have any doubts, feel free to create an issue or 
   ```
   python main.py inf
   ```
+#### Special Argument: `--nolost`
+
+If you want the script to continue farming even when you lose a battle (e.g., due to bad rotations), you can use the `--nolost` argument. This allows the script to retry automatically without interruption. However, use this option carefully because the script will run indefinitely.
+
+#### Example:
+```bash
+python main.py inf --nolost
+```
+
 ## Disclaimer
 
 This project is intended for educational and personal use only. The use of automation bots in games may violate the game's terms of service, and using this script may carry the risk of account suspension or banning. The developer of this project is not responsible for any consequences resulting from the use of this bot.
