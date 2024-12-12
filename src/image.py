@@ -92,5 +92,4 @@ class ImageProcessor:
         _, max_val, _, _ = cv2.minMaxLoc(result)
         if max_val >= threshold:
             return True
-        else:
-            return False
+        return False
