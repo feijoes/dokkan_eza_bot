@@ -87,3 +87,10 @@ class ImageProcessor:
             return True, center_x, center_y
         else:
             return False, None, None
+    def find_image_in_another(source_image, template, threshold: int = 0.5) -> bool:
+        result = cv2.matchTemplate(source_image, template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, _ = cv2.minMaxLoc(result)
+        if max_val >= threshold:
+            return True
+        else:
+            return False
