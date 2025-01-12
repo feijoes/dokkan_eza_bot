@@ -39,13 +39,13 @@ class EZA(Bot):
     @retry(retries=2)
     def Cancel(self, raise_error: bool = True):
         """Attempt to cancel with retry logic."""
-        return self._perform_action("./Images/CANCEL.jpeg", raise_error=False)
+        return self._perform_action("./Images/CANCEL.jpeg", trys=5, raise_error=False)
 
     @retry(retries=3)
     def End(self, raize_error: bool = True):
         """Handle end of battle with retry logic."""
         battle_status = self._find_dual_images(
-            "./Images/END.jpg", "./Images/STA.jpg", wait=10
+            "./Images/END.jpg", "./Images/STA.jpg", wait=5
         )
         if battle_status[0] == -1 and raize_error:
             self._handle_error("'END' nor 'STA'")
@@ -146,6 +146,7 @@ def inf(no_lost: bool):
             if not no_lost:
                 break
             continue
+        print("Battle ended")
         time.sleep(1.5)
         eza.OK()
         time.sleep(1)
