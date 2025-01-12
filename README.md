@@ -8,13 +8,13 @@
 
 The Dokkan Battle EZA Farming Bot is a Python script designed to automate the process of farming the Extreme Z-Awakening levels in Dragon Ball Z Dokkan Battle. The script runs on your computer and interacts with the game on your phone.
 
-If you encounter any errors or have any doubts, you can create an issue or contact me at pcaladomoura@gmail.com.
+If you encounter any errors or have any doubts, feel free to create an issue or contact me at pcaladomoura@gmail.com or on Discord at feijao6054.
 
 ## Features
 
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
 - It identifies buttons and actions using images, so it can adapt to different screen sizes and resolutions.
-- Can swipe bettwen eza and only 
+- Can swipe bettwen eza
 
 ***Tip***: If the bot doesn’t seem to be working correctly, particularly if it's failing to detect buttons or actions in the game, try replacing the images in the script with screenshots from your own game setup. These images are used to identify in-game elements, and if your screen layout differs, custom screenshots may improve accuracy.
 
@@ -26,7 +26,7 @@ If you encounter any errors or have any doubts, you can create an issue or conta
       * **USB Debbuging**
 
 4. Your computer should have Python 3.x installed. You can download it from the [official Python website](https://www.python.org/downloads/).
-5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer
+5. Install [tesseract](https://linuxhint.com/install-tesseract-windows/) in your computer (required for Normal mode, optional for INF mode)
 
 ## Usage 
 ***WARNING*** the normal mode maybe outdate, use the Infinite Mode for now
@@ -55,6 +55,15 @@ If you encounter any errors or have any doubts, you can create an issue or conta
   ```
   python main.py inf
   ```
+#### Special Argument: `--nolost`
+
+If you want the script to continue farming even when you lose a battle (e.g., due to bad rotations), you can use the `--nolost` argument. This allows the script to retry automatically without interruption. However, use this option carefully because the script will run indefinitely.
+
+#### Example:
+```bash
+python main.py inf --nolost
+```
+
 ## Disclaimer
 
 This project is intended for educational and personal use only. The use of automation bots in games may violate the game's terms of service, and using this script may carry the risk of account suspension or banning. The developer of this project is not responsible for any consequences resulting from the use of this bot.
