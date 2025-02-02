@@ -10,6 +10,8 @@ The Dokkan Battle EZA Farming Bot is a Python script designed to automate the pr
 
 If you encounter any errors or have any doubts, feel free to create an issue or contact me at pcaladomoura@gmail.com or on Discord at feijao6054.
 
+Don't forget to star the repo ⭐ 
+
 ## Features
 
 - Automated farming of Extreme Z-Awakening levels in Dokkan Battle.
